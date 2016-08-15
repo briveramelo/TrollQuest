@@ -19,6 +19,6 @@ public class UICanvas : MonoBehaviour {
     }
 
     public void SetWeapon(Weapon weapon) {
-        weaponSprite.sprite = WeaponSprites.Instance.GetWeaponSprite(weapon);
+        //weaponSprite.sprite = WeaponSprites.Instance.GetWeaponSprite(weapon);
     }
 }

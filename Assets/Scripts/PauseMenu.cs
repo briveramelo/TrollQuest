@@ -27,9 +27,8 @@ public class PauseMenu : MonoBehaviour {
     public void SetWeapon(Weapon weapon) {
         weaponLevelText.text = "Lvl. " + weapon.level.ToString();
         weaponAttackText.text = "Atk +" + weapon.attack.ToString();
-        weaponImage.sprite = WeaponSprites.Instance.GetWeaponSprite(weapon);
+        //weaponImage.sprite = WeaponSprites.Instance.GetWeaponSprite(weapon);
     }
-
 
     public void Continue() {
         Pauser.Instance.UnPause();
