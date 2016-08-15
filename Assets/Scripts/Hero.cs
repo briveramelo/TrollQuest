@@ -35,7 +35,6 @@ public class Hero : MonoBehaviour {
 
     void Start() {
         CameraFollowPlayer.Instance.getNewHero(transform);
-        myWeaponPack = new WeaponPack();
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon());
         PauseMenu.Instance.SetStats(myStats);
         currentHealth = myStats.health;
@@ -48,7 +47,7 @@ public class Hero : MonoBehaviour {
     }
 
     void CheckForWeaponInput() {
-        if (Input.GetButtonDown(Controls.Attack)){
+        if (Input.GetButtonDown(Controls.Attack) && !myWeaponPack.attacking) {
             HandleAttack(myLastDir);
         }
         else if (Input.GetButtonDown(Controls.Swap)){
@@ -59,6 +58,7 @@ public class Hero : MonoBehaviour {
 
     #region HandleAttack
     void HandleAttack(CardinalDirection myCardDir) {
+        StartCoroutine (myWeaponPack.Attack(myStats.attack));
         if (myWeaponPack.selectedWeapon == Weapons.Bow){
             myAnimator.SetInteger("AnimState", (int)cardDirAttacks[myCardDir].bowAnimState);
         }
@@ -206,9 +206,7 @@ public class Hero : MonoBehaviour {
     }
 
     public void TakeDamage(int attack) {
-        Debug.Log(attack);
         int damageTaken = Mathf.Clamp(attack - myStats.defense, 0, int.MaxValue);
-        Debug.Log(damageTaken);
         currentHealth -= damageTaken;
         UICanvas.Instance.SetHealth(currentHealth, myStats.health);
         if (currentHealth <= 0) {

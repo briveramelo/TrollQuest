@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Witch : MonoBehaviour {
+public class Witch : Enemy {
 
     void OnDrawGizmos() {
         Gizmos.color = Color.green;
@@ -18,7 +18,6 @@ public class Witch : MonoBehaviour {
     bool attacking = false;
     [SerializeField] Rigidbody2D rigbod;
     [SerializeField] CircleCollider2D myCirCol;
-    [SerializeField] Stats myStats;
     [SerializeField] GameObject witchBlast;
 
 	// Use this for initialization
@@ -75,9 +74,7 @@ public class Witch : MonoBehaviour {
     [SerializeField] DirectionProperties y = new DirectionProperties(false);
 
     float GetNewDirection(ref DirectionProperties direction) {
-        Debug.Log("Getting new direction");
         if (!direction.waitingOn) {
-            Debug.Log("Finding new Movement");
             if (direction.isX) {
                 StartCoroutine(HoldForX());
             }
