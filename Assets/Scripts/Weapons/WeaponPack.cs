@@ -41,13 +41,13 @@ public class WeaponPack : MonoBehaviour {
     public void Upgrade(Weapon weapon) {
         switch (weapon.weaponType) {
             case Weapons.Sword:
-                mySword = (Sword)weapon;
+                mySword.Upgrade(weapon);
                 break;
             case Weapons.Magic:
-                myMagic = (Magic)weapon;
+                myMagic.Upgrade(weapon);
                 break;
             case Weapons.Bow:
-                myBow = (Bow)weapon;
+                myBow.Upgrade(weapon);
                 break;
         }
     }

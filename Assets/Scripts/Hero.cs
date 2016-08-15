@@ -86,13 +86,16 @@ public class Hero : MonoBehaviour {
     #endregion
 
     void SwapWeapons() {
+        myWeaponPack.GetSelectedWeapon().GetComponent<SpriteRenderer>().enabled = false;
         myWeaponPack.selectedWeapon++;
         if ((int)myWeaponPack.selectedWeapon > System.Enum.GetValues(typeof(Weapons)).Length-1) {
             myWeaponPack.selectedWeapon = 0;
         }
         else if (!weaponsCollected[myWeaponPack.selectedWeapon]) {
             SwapWeapons();
+            return;
         }
+        myWeaponPack.GetSelectedWeapon().GetComponent<SpriteRenderer>().enabled = true;
         UICanvas.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon());
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon());
     }

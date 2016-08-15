@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 
 public enum Weapons {
@@ -19,9 +20,11 @@ public class Weapon : MonoBehaviour{
     [Range(0, 1)] public float percentTimeOfDanger = 0.6f;
     public AudioSource mySoundBox;
     public AudioClip[] myClips;
+    List<Collider2D> thisSwingsHits = new List<Collider2D>();
 
     public virtual IEnumerator Attack(int wielderAttack) {
         //mySoundBox.PlayOneShot(myClips[level-1]);
+        thisSwingsHits = new List<Collider2D>();
         this.wielderAttack = wielderAttack;
         myCol.enabled = true;
         yield return new WaitForSeconds((1f / (float)strikesPerSecond) * percentTimeOfDanger);
@@ -34,8 +37,20 @@ public class Weapon : MonoBehaviour{
     }
 
     void OnTriggerEnter2D(Collider2D col) {
-        if (col.gameObject.layer == Layers.enemy) {
+        Debug.Log("Does this have the col?");
+        Debug.Log(thisSwingsHits.Contains(col));
+        if (col.gameObject.layer == Layers.enemy && !thisSwingsHits.Contains(col)) {
+            thisSwingsHits.Add(col);
             col.GetComponent<Enemy>().TakeDamage(wielderAttack + attack);
+            myCol.enabled = false;
         }
+    }
+
+    public void Upgrade(Weapon newWeapon) {
+        attack = newWeapon.attack;
+        level = newWeapon.level;
+        strikesPerSecond = newWeapon.strikesPerSecond;
+        percentTimeOfDanger = newWeapon.percentTimeOfDanger;
+        myClips = newWeapon.myClips;
     }
 }

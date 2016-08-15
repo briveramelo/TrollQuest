@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Witch : Enemy {
+public class Witch : MonoBehaviour {
 
     void OnDrawGizmos() {
         Gizmos.color = Color.green;
@@ -19,6 +19,7 @@ public class Witch : Enemy {
     [SerializeField] Rigidbody2D rigbod;
     [SerializeField] CircleCollider2D myCirCol;
     [SerializeField] GameObject witchBlast;
+    [SerializeField] Stats myStats;
 
 	// Use this for initialization
 	void Start () {
