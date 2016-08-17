@@ -23,7 +23,7 @@ public class UICanvas : MonoBehaviour {
         healthBar.ActivateHealthBars(healthFraction);
     }
 
-    public void SetWeapon(Weapon weapon) {
-        //weaponSprite.sprite = WeaponSprites.Instance.GetWeaponSprite(weapon);
+    public void SetWeapon(WeaponStats weaponStats) {
+        weaponSprite.sprite = WeaponSprites.Instance.GetWeaponSprite(weaponStats);
     }
 }

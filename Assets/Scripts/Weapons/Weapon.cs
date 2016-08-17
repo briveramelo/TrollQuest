@@ -5,7 +5,8 @@ using System.Collections;
 public enum Weapons {
     Sword=0,
     Magic=1,
-    Bow=2
+    Bow=2,
+    Arrow=3
 }
 
 public class Weapon : MonoBehaviour{
@@ -13,10 +14,12 @@ public class Weapon : MonoBehaviour{
     public Collider2D myCol;
     public WeaponStats myWeaponStats;
     public AudioSource mySoundBox;
-    public int wielderAttack;
-    List<Collider2D> thisSwingsHits = new List<Collider2D>();
+    [HideInInspector] public int wielderAttack;
+    [SerializeField] protected Animator myAnimator;
+    [SerializeField] protected SpriteRenderer mySpriteRenderer;
+    protected List<Collider2D> thisSwingsHits = new List<Collider2D>();
 
-    public virtual IEnumerator Attack(int wielderAttack) {
+    public virtual IEnumerator Attack(int wielderAttack, CardinalDirection attackDir) {
         //mySoundBox.PlayOneShot(myWeaponStats.myAudioClips[level-1]);
         thisSwingsHits = new List<Collider2D>();
         this.wielderAttack = wielderAttack;
@@ -36,5 +39,32 @@ public class Weapon : MonoBehaviour{
 
     public void Upgrade(WeaponStats newWeaponStats) {
         myWeaponStats.SetWeaponStats(newWeaponStats);
+        switch (newWeaponStats.weaponType) {
+            case Weapons.Sword:
+                mySpriteRenderer.sprite = WeaponSprites.Instance.swordSprites[newWeaponStats.level-1];
+                break;
+            case Weapons.Magic:
+                mySpriteRenderer.sprite = WeaponSprites.Instance.magicSprites[newWeaponStats.level - 1];
+                break;
+            case Weapons.Bow:
+                mySpriteRenderer.sprite = WeaponSprites.Instance.bowSprites[newWeaponStats.level - 1];
+                myAnimator.SetInteger("AnimState", (int)levelReleasedStates[newWeaponStats.level]);
+                break;
+        }
+        
+    }
+
+    Dictionary<int, BowAnimState> levelReleasedStates = new Dictionary<int, BowAnimState>() {
+        {1,BowAnimState.Bow1Released},
+        {2,BowAnimState.Bow2Released},
+        {3,BowAnimState.Bow3Released}
+    };
+    enum BowAnimState {
+        Bow1Cocking = 0,
+        Bow1Released = 1,
+        Bow2Cocking = 2,
+        Bow2Released = 3,
+        Bow3Cocking = 4,
+        Bow3Released = 5,
     }
 }

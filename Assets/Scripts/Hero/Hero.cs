@@ -56,7 +56,7 @@ public class Hero : MonoBehaviour {
 
     void CheckForWeaponInput() {
         if (Input.GetButtonDown(Controls.Attack) && !myWeaponPack.attacking) {
-            StartCoroutine(myWeaponPack.Attack(myStats.attack));
+            StartCoroutine(myWeaponPack.Attack(myStats.attack, myLastDir));
             SetAttackAnimState();
         }
         else if (Input.GetButtonDown(Controls.Swap)){
@@ -129,7 +129,7 @@ public class Hero : MonoBehaviour {
     void SwapWeapons() {
         myWeaponPack.GetSelectedWeapon().GetComponent<SpriteRenderer>().enabled = false;
         myWeaponPack.selectedWeapon++;
-        if ((int)myWeaponPack.selectedWeapon > System.Enum.GetValues(typeof(Weapons)).Length-1) {
+        if ((int)myWeaponPack.selectedWeapon > (int)Weapons.Bow) {
             myWeaponPack.selectedWeapon = 0;
         }
         else if (!myWeaponPack.weaponsCollected[myWeaponPack.selectedWeapon]) {
@@ -137,7 +137,7 @@ public class Hero : MonoBehaviour {
             return;
         }
         myWeaponPack.GetSelectedWeapon().GetComponent<SpriteRenderer>().enabled = true;
-        UICanvas.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon());
+        UICanvas.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
     }
 
@@ -268,10 +268,12 @@ public class Hero : MonoBehaviour {
 
     void CollectWeapon(WeaponStats newWeaponStats) {
         myWeaponPack.weaponsCollected[newWeaponStats.weaponType] = true;
-        myWeaponPack.Upgrade(newWeaponStats);
+        if (myWeaponPack.weaponPack[newWeaponStats.weaponType].myWeaponStats.level < newWeaponStats.level) {
+            myWeaponPack.Upgrade(newWeaponStats);
+        }
         newWeaponStats.GetCollected();
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
-        UICanvas.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon());
+        UICanvas.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
     }
     #endregion
 

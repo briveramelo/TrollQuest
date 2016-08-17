@@ -8,13 +8,20 @@ public class WeaponSprites : MonoBehaviour {
     [SerializeField] public Sprite[] swordSprites;
     [SerializeField] public Sprite[] magicSprites;
     [SerializeField] public Sprite[] bowSprites;
+    [SerializeField] public Sprite[] arrowSprites;
 
     void Awake() {
-        Instance = this;
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
         myWeaponSprites = new Dictionary<Weapons, Sprite[]>() {
             {Weapons.Sword, swordSprites },
             {Weapons.Magic, magicSprites },
-            {Weapons.Bow, bowSprites }
+            {Weapons.Bow, bowSprites },
+            {Weapons.Arrow, arrowSprites }
         };
     }
 

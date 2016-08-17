@@ -24,9 +24,9 @@ public class WeaponPack : MonoBehaviour {
         };
     }
 
-    public IEnumerator Attack(int wielderAttack) {
+    public IEnumerator Attack(int wielderAttack, CardinalDirection cardDir) {
         attacking = true;
-        yield return StartCoroutine(weaponPack[selectedWeapon].Attack(wielderAttack));
+        yield return StartCoroutine(weaponPack[selectedWeapon].Attack(wielderAttack, cardDir));
         attacking = false;
     }
 
@@ -40,8 +40,8 @@ public class WeaponPack : MonoBehaviour {
 
     public void SetWeaponPack(WeaponPackSaveable weaponPack) {
         this.weaponsCollected = weaponPack.weaponsCollected;
-        this.mySword.myWeaponStats.SetWeaponStats(weaponPack.mySwordStats);
-        this.myMagic.myWeaponStats.SetWeaponStats(weaponPack.myMagicStats);
-        this.myBow.myWeaponStats.SetWeaponStats(weaponPack.myBowStats);
+        this.weaponPack[Weapons.Sword].myWeaponStats.SetWeaponStats(weaponPack.mySwordStats);
+        this.weaponPack[Weapons.Magic].myWeaponStats.SetWeaponStats(weaponPack.myMagicStats);
+        this.weaponPack[Weapons.Bow].myWeaponStats.SetWeaponStats(weaponPack.myBowStats);
     }
 }
