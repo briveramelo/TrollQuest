@@ -1,29 +1,26 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class WeaponSprites : MonoBehaviour {
 
     public static WeaponSprites Instance;
-
+    Dictionary<Weapons, Sprite[]> myWeaponSprites;
     [SerializeField] public Sprite[] swordSprites;
     [SerializeField] public Sprite[] magicSprites;
     [SerializeField] public Sprite[] bowSprites;
 
     void Awake() {
         Instance = this;
+        myWeaponSprites = new Dictionary<Weapons, Sprite[]>() {
+            {Weapons.Sword, swordSprites },
+            {Weapons.Magic, magicSprites },
+            {Weapons.Bow, bowSprites }
+        };
     }
 
-    public Sprite GetWeaponSprite(Weapon weapon) {
-        int levelIndex = weapon.level - 1;
-        switch (weapon.weaponType) {
-            case Weapons.Sword:
-                return swordSprites[levelIndex];
-            case Weapons.Magic:
-                return magicSprites[levelIndex];
-            case Weapons.Bow:
-                return bowSprites[levelIndex];
-        }
-        return new Sprite(); //dummy sprite
+    public Sprite GetWeaponSprite(WeaponStats weaponStats) {
+        int levelIndex = weaponStats.level - 1;
+        return (myWeaponSprites[weaponStats.weaponType])[levelIndex];
     }
 
 }

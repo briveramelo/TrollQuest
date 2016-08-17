@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
+public class EnemyHitBox : MonoBehaviour {
 
-    [SerializeField] Stats myStats;
+    [SerializeField] protected Stats myStats;
     public int currentHealth;
 
     void Awake() {
         currentHealth = myStats.health;
     }
 
-    public void TakeDamage(int attack) {
+    public virtual void TakeDamage(int attack) {
         Debug.Log(attack);
         int damageTaken = Mathf.Clamp(attack - myStats.defense, 0, int.MaxValue);
         currentHealth -= damageTaken;

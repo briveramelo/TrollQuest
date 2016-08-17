@@ -9,48 +9,36 @@ public enum Weapons {
 }
 
 
+
+
 public class Weapon : MonoBehaviour{
 
     [HideInInspector] public Weapons weaponType;
     public Collider2D myCol;
-    public int attack=1;
-    public int wielderAttack;
-    [Range (1,3)] public int level=1;
-    [Range (2,10)] public int strikesPerSecond = 2;
-    [Range(0, 1)] public float percentTimeOfDanger = 0.6f;
+    public WeaponStats myWeaponStats;
     public AudioSource mySoundBox;
-    public AudioClip[] myClips;
+    public int wielderAttack;
     List<Collider2D> thisSwingsHits = new List<Collider2D>();
 
     public virtual IEnumerator Attack(int wielderAttack) {
-        //mySoundBox.PlayOneShot(myClips[level-1]);
+        //mySoundBox.PlayOneShot(myWeaponStats.myAudioClips[level-1]);
         thisSwingsHits = new List<Collider2D>();
         this.wielderAttack = wielderAttack;
         myCol.enabled = true;
-        yield return new WaitForSeconds((1f / (float)strikesPerSecond) * percentTimeOfDanger);
+        yield return new WaitForSeconds((1f / (float)myWeaponStats.strikesPerSecond) * myWeaponStats.percentTimeOfDanger);
         myCol.enabled = false;
-        yield return new WaitForSeconds((1f / (float)strikesPerSecond) * (1f - percentTimeOfDanger));
-    }
-
-    public void GetCollected() {
-        Destroy(gameObject);
+        yield return new WaitForSeconds((1f / (float)myWeaponStats.strikesPerSecond) * (1f - myWeaponStats.percentTimeOfDanger));
     }
 
     void OnTriggerEnter2D(Collider2D col) {
-        Debug.Log("Does this have the col?");
-        Debug.Log(thisSwingsHits.Contains(col));
         if (col.gameObject.layer == Layers.enemy && !thisSwingsHits.Contains(col)) {
             thisSwingsHits.Add(col);
-            col.GetComponent<Enemy>().TakeDamage(wielderAttack + attack);
+            col.GetComponent<EnemyHitBox>().TakeDamage(wielderAttack + myWeaponStats.attack);
             myCol.enabled = false;
         }
     }
 
-    public void Upgrade(Weapon newWeapon) {
-        attack = newWeapon.attack;
-        level = newWeapon.level;
-        strikesPerSecond = newWeapon.strikesPerSecond;
-        percentTimeOfDanger = newWeapon.percentTimeOfDanger;
-        myClips = newWeapon.myClips;
+    public void Upgrade(WeaponStats newWeaponStats) {
+        myWeaponStats = newWeaponStats;
     }
 }

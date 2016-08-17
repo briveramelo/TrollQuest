@@ -10,7 +10,8 @@ public class Witch : MonoBehaviour {
         Gizmos.DrawWireSphere(transform.position, spacingDistance);
     }
 
-    public float sensingDistance = 6f;
+    [SerializeField] Animator myAnimator;
+    float sensingDistance;
     public float spacingDistance = 3f;
     public float moveSpeed = 3f;
     public float launchSpeed = 2f;
@@ -21,9 +22,15 @@ public class Witch : MonoBehaviour {
     [SerializeField] GameObject witchBlast;
     [SerializeField] Stats myStats;
 
+
+    enum AnimState {
+        Idle=0,
+        Approach=1,
+        Cast=2
+    }
 	// Use this for initialization
 	void Start () {
-        myCirCol.radius = sensingDistance / transform.localScale.x;
+        sensingDistance = myCirCol.radius * transform.lossyScale.x;
     }
 
     float distanceAway;
@@ -47,6 +54,7 @@ public class Witch : MonoBehaviour {
         attacking = true;
         Projectile myBlast = (Instantiate(witchBlast, transform.position, Quaternion.identity) as GameObject).GetComponent<Projectile>();
         myBlast.Launch(attackVec, myStats.attack);
+        myAnimator.SetInteger("AnimState", (int)AnimState.Cast);
         yield return new WaitForSeconds(shotPeriod);
         attacking = false;
     }
@@ -63,12 +71,20 @@ public class Witch : MonoBehaviour {
         moveFloat = Mathf.MoveTowards(moveFloat, moveToward ? .6f : -.8f, moveToward ? 0.006f: 0.0275f);
         Vector3 moveDir = moveFloat * (heroPosition - transform.position).normalized;
         rigbod.velocity = moveDir * moveSpeed;
+        FaceForward(transform.position.x-heroPosition.x < 0);
+        myAnimator.SetInteger("AnimState", (int)AnimState.Idle);
     }
 
     public float wanderSpeed;
     void Wander() {
         Vector2 targetMove = Vector2.ClampMagnitude(wanderSpeed * new Vector2(GetNewDirection(ref x), GetNewDirection(ref y)), wanderSpeed);
         rigbod.velocity = Vector2.MoveTowards(rigbod.velocity, targetMove, 0.5f);
+        FaceForward(rigbod.velocity.x > 0);
+        myAnimator.SetInteger("AnimState", (int)AnimState.Idle);
+    }
+
+    void FaceForward(bool forward) {
+        transform.localScale = new Vector3(forward ? 1f:-1f, 1f, 1f);
     }
 
     [SerializeField] DirectionProperties x = new DirectionProperties(true);
