@@ -10,11 +10,16 @@ public class UICanvas : MonoBehaviour {
     [SerializeField] SpriteRenderer weaponSprite;
 
     void Awake() {
-        Instance = this;
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
-    public void SetHealth(int currentHealth, int maxHealth) {
-        float healthFraction = ((float)currentHealth) / ((float)maxHealth);
+    public void SetHealth(Stats stats) {
+        float healthFraction = ((float)stats.currentHealth) / ((float)stats.health);
         healthBar.ActivateHealthBars(healthFraction);
     }
 

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour {
 
     public static PauseMenu Instance;
-    [SerializeField] GameObject ConfirmationWindow;
+    [SerializeField] GameObject QuitConfirmationWindow;
+    [SerializeField] GameObject CloseConfirmationWindow;
 
     [SerializeField] Image weaponImage;
     [SerializeField] Text weaponLevelText;
@@ -15,7 +16,12 @@ public class PauseMenu : MonoBehaviour {
     [SerializeField] Text defenseText;
 
     void Awake() {
-        Instance = this;
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
         gameObject.SetActive(false);
     }
 
@@ -34,15 +40,30 @@ public class PauseMenu : MonoBehaviour {
         Pauser.Instance.UnPause();
     }
 
+    public void Quit() {
+        Pauser.Instance.UnPause();
+        SceneManager.LoadScene((int)GameScene.MainMenu);
+    }
+
     public void DisplayQuitConfirmation() {
-        ConfirmationWindow.SetActive(true);
+        QuitConfirmationWindow.SetActive(true);
     }
 
     public void HideQuiteConfirmation() {
-        ConfirmationWindow.SetActive(false);
+        QuitConfirmationWindow.SetActive(false);
     }
 
-    public void Quit() {
-        SceneManager.LoadScene((int)GameScene.MainMenu);
+    public void Close() {
+        Application.Quit();
     }
+
+    public void DisplayCloseConfirmation() {
+        CloseConfirmationWindow.SetActive(true);
+    }
+
+    public void HideCloseConfirmation() {
+        CloseConfirmationWindow.SetActive(false);
+    }
+
+
 }

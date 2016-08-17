@@ -8,12 +8,8 @@ public enum Weapons {
     Bow=2
 }
 
-
-
-
 public class Weapon : MonoBehaviour{
 
-    [HideInInspector] public Weapons weaponType;
     public Collider2D myCol;
     public WeaponStats myWeaponStats;
     public AudioSource mySoundBox;
@@ -39,6 +35,6 @@ public class Weapon : MonoBehaviour{
     }
 
     public void Upgrade(WeaponStats newWeaponStats) {
-        myWeaponStats = newWeaponStats;
+        myWeaponStats.SetWeaponStats(newWeaponStats);
     }
 }

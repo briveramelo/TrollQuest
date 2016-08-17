@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void StartNewGame() {
+        Hero.lives = 3;
         SceneManager.LoadScene((int)GameScene.MainWorld);
     }
 
@@ -18,5 +19,9 @@ public class MainMenu : MonoBehaviour {
 
     public void ViewAchievements() {
         SceneManager.LoadScene((int)GameScene.Achievements);
+    }
+
+    public void CloseGame() {
+        Application.Quit();
     }
 }

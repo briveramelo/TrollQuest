@@ -69,6 +69,7 @@ public class Orc : MonoBehaviour {
 
     public float cockTime;
     public float attackTime;
+    public float hangTime;
     IEnumerator Attack(CardinalDirection attackDir) {
         attacking = true;
         myEnemyWeapon.SetAttack(myStats.attack);
@@ -83,6 +84,7 @@ public class Orc : MonoBehaviour {
         SetAttackingAnimation(goUp);
         yield return new WaitForSeconds(attackTime);
         myAttackingCol.enabled = false;
+        yield return new WaitForSeconds(hangTime);
         attacking = false;
         StartCoroutine (TravelToNextSquare());
     }
@@ -137,19 +139,22 @@ public class Orc : MonoBehaviour {
         rigbod.velocity = moveDir.normalized* approachSpeed;
         Vector3 target = moveDir + transform.position;
         while (true) {
-            if (Vector3.Distance(playerTransform.position, transform.position) < swingDistance) {
-                Debug.LogWarning("ATTACKING");
-                CardinalDirection movementCardDir = GetUpDown(playerTransform.position);
-                Debug.Log(movementCardDir);
-                StartCoroutine(Attack(movementCardDir));
+            if (playerTransform) {
+                if (Vector3.Distance(playerTransform.position, transform.position) < swingDistance) {
+                    CardinalDirection movementCardDir = GetUpDown(playerTransform.position);
+                    StartCoroutine(Attack(movementCardDir));
+                    break;
+                }
+                else if (Vector3.Distance(transform.position, target) < 0.2f) {
+                    StartCoroutine(TravelToNextSquare());
+                    break;
+                }
+                yield return null;
+            }
+            else {
                 break;
             }
-            else if (Vector3.Distance(transform.position, target) < 0.2f) {
-                Debug.LogWarning("WANDERING");
-                StartCoroutine(TravelToNextSquare());
-                break;
-            }
-            yield return null;
+
         }
         approaching = false;
         yield return null;

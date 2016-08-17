@@ -15,6 +15,9 @@ public class Hog : MonoBehaviour {
     [SerializeField] Rigidbody2D rigbod;
     [SerializeField] Collider2D myAttackingCol;
     [SerializeField] Animator myAnimator;
+    [SerializeField] Stats myStats;
+    [SerializeField] EnemyWeapon myEnemyWeapon;
+
     public float moveSpeed;
     public float approachSpeed;
     public float chargeSpeed;
@@ -61,14 +64,20 @@ public class Hog : MonoBehaviour {
 
     IEnumerator Charge(Transform targetPlayer) {
         charging = true;
+        myEnemyWeapon.SetAttack(myStats.attack);
         myAttackingCol.enabled = true;
         myAnimator.SetInteger("AnimState", (int)AnimState.Running);
         int timesToCross = Random.Range(3, 5);
 
         for (int i = 0; i < timesToCross; i++) {
-            bool final = i == (timesToCross - 1);
-            Vector3 target = (!final ? GetTarget(targetPlayer, i) : GetDirectChargeTarget(targetPlayer.position));
-            yield return StartCoroutine(ChargeInNextDirection(target, final));
+            if (targetPlayer) {
+                bool final = i == (timesToCross - 1);
+                Vector3 target = (!final ? GetTarget(targetPlayer, i) : GetDirectChargeTarget(targetPlayer.position));
+                yield return StartCoroutine(ChargeInNextDirection(target, final));
+            }
+            else {
+                break;
+            }
         }
         myAttackingCol.enabled = false;
         yield return StartCoroutine(TakeABreather());

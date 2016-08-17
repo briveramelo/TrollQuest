@@ -7,11 +7,17 @@ public class Pauser : MonoBehaviour {
     bool paused = false;
     [SerializeField] GameObject pauseMenuCanvas;
     [SerializeField] GameObject uiCanvas;
+    [SerializeField] GameObject eventSystem;
 
     void Start() {
         pauseMenuCanvas = PauseMenu.Instance.gameObject;
         uiCanvas = UICanvas.Instance.gameObject;
-        Instance = this;
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     void Update() {
@@ -28,6 +34,7 @@ public class Pauser : MonoBehaviour {
     public void Pause() {
         Time.timeScale = 0;
         pauseMenuCanvas.SetActive(true);
+        eventSystem.SetActive(true);
         uiCanvas.SetActive(false);
         paused = !paused;
     }
@@ -35,6 +42,7 @@ public class Pauser : MonoBehaviour {
     public void UnPause() {
         Time.timeScale = 1;
         pauseMenuCanvas.SetActive(false);
+        eventSystem.SetActive(false);
         uiCanvas.SetActive(true);
         paused = !paused;
     }

@@ -5,16 +5,30 @@ public class DialogueBox : MonoBehaviour {
 
     public static DialogueBox Instance;
     [SerializeField] TextMesh[] myTextMeshes;
+    [SerializeField] SpriteRenderer speakerSpriteRenderer;
     string[] textLines;
     public int[] maxCharacters = new int[] { 26, 32, 32 };
 
     void Awake() {
-        Instance = this;
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
         textLines = new string[myTextMeshes.Length];
+    }
+
+    public void DeActivate() {
+        transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public void Activate() {
         transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public void SetFace(Sprite speakerSprite) {
+        speakerSpriteRenderer.sprite = speakerSprite;
     }
 
     public void InsertNewText(string newText) {
@@ -49,7 +63,7 @@ public class DialogueBox : MonoBehaviour {
             yield return StartCoroutine(TickerPrintText(textLines[i], i));
         }
         yield return new WaitForSeconds(3f);
-        transform.GetChild(0).gameObject.SetActive(false);
+        DeActivate();
     }
 
     public float lettersPerSecond;

@@ -12,4 +12,19 @@ public class WeaponStats : MonoBehaviour {
     public void GetCollected() {
         Destroy(gameObject);
     }
+
+    public void SetWeaponStats(WeaponStatsSavable weaponStats) {
+        this.weaponType = weaponStats.weaponType;
+        this.attack = weaponStats.attack;
+        this.level = weaponStats.level;
+        this.strikesPerSecond = weaponStats.strikesPerSecond;
+        this.percentTimeOfDanger = weaponStats.percentTimeOfDanger;
+    }
+    public void SetWeaponStats(WeaponStats weaponStats) {
+        this.weaponType = weaponStats.weaponType;
+        this.attack = weaponStats.attack;
+        this.level = weaponStats.level;
+        this.strikesPerSecond = weaponStats.strikesPerSecond;
+        this.percentTimeOfDanger = weaponStats.percentTimeOfDanger;
+    }
 }

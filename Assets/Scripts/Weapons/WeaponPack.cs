@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 
 public class WeaponPack : MonoBehaviour {
 
     public Dictionary<Weapons, Weapon> weaponPack;
+    public Dictionary<Weapons, bool> weaponsCollected = new Dictionary<Weapons, bool>() {
+        {Weapons.Sword, true },
+        {Weapons.Magic, false },
+        {Weapons.Bow, false }
+    };
     public Sword mySword;
     public Magic myMagic;
     public Bow myBow;
@@ -32,5 +36,12 @@ public class WeaponPack : MonoBehaviour {
 
     public void Upgrade(WeaponStats newWeaponStats) {
         weaponPack[newWeaponStats.weaponType].Upgrade(newWeaponStats);
+    }
+
+    public void SetWeaponPack(WeaponPackSaveable weaponPack) {
+        this.weaponsCollected = weaponPack.weaponsCollected;
+        this.mySword.myWeaponStats.SetWeaponStats(weaponPack.mySwordStats);
+        this.myMagic.myWeaponStats.SetWeaponStats(weaponPack.myMagicStats);
+        this.myBow.myWeaponStats.SetWeaponStats(weaponPack.myBowStats);
     }
 }

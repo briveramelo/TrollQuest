@@ -24,21 +24,29 @@ public class Hero : MonoBehaviour {
     [SerializeField] Rigidbody2D rigbod;
     [SerializeField] Animator myAnimator;
     public WeaponPack myWeaponPack;
-    public Dictionary<Weapons, bool> weaponsCollected = new Dictionary<Weapons, bool>() {
-        {Weapons.Sword, true },
-        {Weapons.Magic, false },
-        {Weapons.Bow, false }
-    };
+    
     float moveSpeed = 5f;
+    public static int lives;
     [SerializeField] Stats myStats;
-    public int currentHealth;
 
     void Start() {
+        if (DataSaver.Instance.dataExists) {
+            //LoadStats();
+        }
         CameraFollowPlayer.Instance.getNewHero(transform);
+        Invoke("FillUI", 0.1f);
+    }
+
+    void FillUI() {
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
         PauseMenu.Instance.SetStats(myStats);
-        currentHealth = myStats.health;
-        UICanvas.Instance.SetHealth(currentHealth, myStats.health);
+        UICanvas.Instance.SetHealth(myStats);
+    }
+
+    void LoadStats() {
+        DataSave quickSave = DataSaver.Instance.CopyCurrentDataSave();
+        myStats.SetStats(quickSave.playerStats);
+        myWeaponPack.SetWeaponPack(quickSave.playerWeaponPack);
     }
 
     void Update() {
@@ -124,7 +132,7 @@ public class Hero : MonoBehaviour {
         if ((int)myWeaponPack.selectedWeapon > System.Enum.GetValues(typeof(Weapons)).Length-1) {
             myWeaponPack.selectedWeapon = 0;
         }
-        else if (!weaponsCollected[myWeaponPack.selectedWeapon]) {
+        else if (!myWeaponPack.weaponsCollected[myWeaponPack.selectedWeapon]) {
             SwapWeapons();
             return;
         }
@@ -239,7 +247,7 @@ public class Hero : MonoBehaviour {
     #region CollectThings
     void OnTriggerEnter2D(Collider2D col) {
         if (col.gameObject.layer == Layers.shrooms) {
-            CollectShrooms(col.GetComponent<Shroom>());
+            CollectShrooms(col.GetComponents<Shroom>());
         }
         else if (col.gameObject.layer == Layers.weaponUpgrades) {
             CollectWeapon(col.GetComponent<WeaponStats>());
@@ -249,15 +257,17 @@ public class Hero : MonoBehaviour {
         }
     }
 
-    void CollectShrooms(Shroom collectedShroom) {
-        StatUpgrade shroomStatUpgrade = collectedShroom.GetCollected();
-        myStats.Upgrade(shroomStatUpgrade);
+    void CollectShrooms(Shroom[] collectedShroom) {
+        for (int i = 0; i < collectedShroom.Length; i++) {
+            StatUpgrade shroomStatUpgrade = collectedShroom[i].GetCollected();
+            myStats.Upgrade(shroomStatUpgrade);
+        }
         PauseMenu.Instance.SetStats(myStats);
-        UICanvas.Instance.SetHealth(currentHealth, myStats.health);
+        UICanvas.Instance.SetHealth(myStats);
     }
 
     void CollectWeapon(WeaponStats newWeaponStats) {
-        weaponsCollected[newWeaponStats.weaponType] = true;
+        myWeaponPack.weaponsCollected[newWeaponStats.weaponType] = true;
         myWeaponPack.Upgrade(newWeaponStats);
         newWeaponStats.GetCollected();
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
@@ -275,13 +285,20 @@ public class Hero : MonoBehaviour {
     }
 
     public void TakeDamage(int attack) {
-        Debug.Log("Attack: " + attack);
         int damageTaken = Mathf.Clamp(attack - myStats.defense, 0, int.MaxValue);
-        Debug.Log("Damage: " + damageTaken);
-        currentHealth -= damageTaken;
-        UICanvas.Instance.SetHealth(currentHealth, myStats.health);
-        if (currentHealth <= 0) {
-            //Display game over message and boot to main menu
+        myStats.currentHealth -= damageTaken;
+        UICanvas.Instance.SetHealth(myStats);
+        if (myStats.currentHealth <= 0) {
+            lives--;
+            DataSaver.Instance.PromptSave(myStats);
+            DataSaver.Instance.PromptSave(myWeaponPack);
+            if (lives > 0) {
+                Respawner.Instance.Respawn();
+            }
+            else {
+                PauseMenu.Instance.Quit();
+            }
+            Destroy(gameObject.transform.parent.gameObject);
         }
     }
 }
