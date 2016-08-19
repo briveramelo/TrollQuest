@@ -136,7 +136,9 @@ public class Hero : MonoBehaviour {
             SwapWeapons();
             return;
         }
-        myWeaponPack.GetSelectedWeapon().GetComponent<SpriteRenderer>().enabled = true;
+        if (myWeaponPack.selectedWeapon != Weapons.Magic) {
+            myWeaponPack.GetSelectedWeapon().GetComponent<SpriteRenderer>().enabled = true;
+        }
         UICanvas.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
     }
