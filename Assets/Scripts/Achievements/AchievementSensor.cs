@@ -20,5 +20,6 @@ public class AchievementSensor : MonoBehaviour {
     public void EarnAchievement(Achievement earnedAchievement) {
         completeAchievements[earnedAchievement] = true;
         DataSaver.Instance.PromptSave(completeAchievements);
+        AchievementInGame.Instance.DisplayAchievement(AchievementDisplay.achievementWords[earnedAchievement]);
     }
 }

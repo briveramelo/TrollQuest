@@ -262,6 +262,9 @@ public class Hero : MonoBehaviour {
         for (int i = 0; i < collectedShroom.Length; i++) {
             StatUpgrade shroomStatUpgrade = collectedShroom[i].GetCollected();
             myStats.Upgrade(shroomStatUpgrade);
+            string displayText = "+" + shroomStatUpgrade.upgradeAmount + " " + StatClass.statStrings[shroomStatUpgrade.StatToUpgrade];
+            Vector3 spawnSpot = transform.position + Vector3.up * verticaDisplayOffset * (i+1);
+            DisplayRepository.Instance.CreateDisplay(Display.Damage, spawnSpot, displayText, textColor);
         }
         PauseMenu.Instance.SetStats(myStats);
         UICanvas.Instance.SetHealth(myStats);
@@ -271,6 +274,9 @@ public class Hero : MonoBehaviour {
         myWeaponPack.weaponsCollected[newWeaponStats.weaponType] = true;
         if (myWeaponPack.weaponPack[newWeaponStats.weaponType].myWeaponStats.level < newWeaponStats.level) {
             myWeaponPack.Upgrade(newWeaponStats);
+            string displayText = "+Level " + newWeaponStats.level.ToString() + " " + newWeaponStats.weaponType.ToString().ToUpper();
+            Vector3 spawnSpot = transform.position + Vector3.up * verticaDisplayOffset;
+            DisplayRepository.Instance.CreateDisplay(Display.Damage, spawnSpot, displayText, textColor);
         }
         newWeaponStats.GetCollected();
         PauseMenu.Instance.SetWeapon(myWeaponPack.GetSelectedWeapon().myWeaponStats);
@@ -287,8 +293,15 @@ public class Hero : MonoBehaviour {
         }
     }
 
+    float verticaDisplayOffset = 0.5f;
+    Color textColor = new Color(1f, (float)((float)207/(float)255), (float)((float)46/(float)255)); //orange health bar color
     public void TakeDamage(int attack) {
         int damageTaken = Mathf.Clamp(attack - myStats.defense, 0, int.MaxValue);
+        if (damageTaken > 0) {
+            string displayText = "-" + damageTaken.ToString();
+            Vector3 spawnSpot = transform.position + Vector3.up * verticaDisplayOffset;
+            DisplayRepository.Instance.CreateDisplay(Display.Damage, spawnSpot, displayText, textColor);
+        }
         myStats.currentHealth -= damageTaken;
         UICanvas.Instance.SetHealth(myStats);
         if (myStats.currentHealth <= 0) {

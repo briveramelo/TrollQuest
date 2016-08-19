@@ -9,11 +9,15 @@ public class EnemyWeapon : MonoBehaviour {
 
     public void SetAttack(int wielderAttack) {
         currentAttack = attack + wielderAttack;
+        active = true;
     }
 
     void OnTriggerEnter2D(Collider2D col) {
-        if (col.gameObject.layer == Layers.player){
+        if (col.gameObject.layer == Layers.player && active){
             col.GetComponent<Hero>().TakeDamage(currentAttack);
+            active = false;
         }
     }
+
+    bool active = false;
 }

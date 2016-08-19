@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public enum Stat {
     Health=0,
     Attack=1,
     Defense=2,
     CurrentHealth=3
+}
+
+public static class StatClass {
+    public static Dictionary<Stat, string> statStrings = new Dictionary<Stat, string>() {
+        {Stat.Health ,"MAX HLT" },
+        {Stat.Attack ,"ATK" },
+        {Stat.Defense ,"DFN" },
+        {Stat.CurrentHealth ,"HLT" }
+    };
 }
 
 public class Stats : MonoBehaviour{

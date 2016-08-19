@@ -7,8 +7,15 @@ public class TrollHitBox : EnemyHitBox {
     public int healthForLastPlea;
     bool firstHit=true;
 
+    float verticaDisplayOffset = 0.5f;
+    Color textColor = new Color(0f, (float)((float)174 / (float)255), 1f);
     public override void TakeDamage(int attack) {
         int damageTaken = Mathf.Clamp(attack - myStats.defense, 0, int.MaxValue);
+        if (damageTaken > 0) {
+            string displayText = "-" + damageTaken.ToString();
+            Vector3 spawnSpot = transform.position + Vector3.up * verticaDisplayOffset;
+            DisplayRepository.Instance.CreateDisplay(Display.Damage, spawnSpot, displayText, textColor);
+        }
         myStats.currentHealth -= damageTaken;
         
         if (firstHit) {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class AchievementDisplay : MonoBehaviour {
 
     public GameObject[] textGameObjects;
-    Dictionary<Achievement, string> achievementWords = new Dictionary<Achievement, string>() {
+    public static Dictionary<Achievement, string> achievementWords = new Dictionary<Achievement, string>() {
         {Achievement.KillTheTroll , "Kill The Troll"},
         {Achievement.FindThePond , "Find The Pond"},
         {Achievement.DoTheThing , "Do The Thing"},
