@@ -8,7 +8,12 @@ public class CameraFollowPlayer : MonoBehaviour {
 
 
     void Awake() {
-        Instance = this;
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
 
     void Update() {
@@ -17,7 +22,8 @@ public class CameraFollowPlayer : MonoBehaviour {
         }
     }
 
-    public void getNewHero(Transform newHeroTransform) {
+    public void GetNewHero(Transform newHeroTransform) {
         heroTransform = newHeroTransform;
+        Debug.Log(newHeroTransform);
     }
 }

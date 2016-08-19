@@ -33,7 +33,6 @@ public class Hero : MonoBehaviour {
         if (DataSaver.Instance.dataExists) {
             //LoadStats();
         }
-        CameraFollowPlayer.Instance.getNewHero(transform);
         Invoke("FillUI", 0.1f);
     }
 

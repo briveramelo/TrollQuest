@@ -18,7 +18,8 @@ public class Respawner : MonoBehaviour {
 
     IEnumerator RespawnHero() {
         yield return new WaitForSeconds(2f);
-        Instantiate(hero, respawnTransform);
+        Transform newHeroTransform = (Instantiate(hero, respawnTransform) as GameObject).transform.GetChild(0);
+        CameraFollowPlayer.Instance.GetNewHero(newHeroTransform);
     }
 
 }
