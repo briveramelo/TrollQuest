@@ -28,6 +28,12 @@ public class Magic : Weapon {
 
     public float shootSpeed;
     public override IEnumerator Attack(int wielderAttack, CardinalDirection attackDir) {
+        int numClips = myWeaponStats.myAudioClips.Length;
+        int levelInd = myWeaponStats.level - 1;
+        if (levelInd < numClips)
+        {
+            mySoundBox.PlayOneShot(myWeaponStats.myAudioClips[levelInd]);
+        }
         MagicBlast myMagicBlast = (Instantiate(magicBlast, transform.position, Quaternion.identity) as GameObject).GetComponent<MagicBlast>();
         myMagicBlast.SetMagicType(myWeaponStats.level);
         int attack = myWeaponStats.attack + wielderAttack;
