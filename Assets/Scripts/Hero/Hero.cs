@@ -23,6 +23,8 @@ public class Hero : MonoBehaviour {
 
     [SerializeField] Rigidbody2D rigbod;
     [SerializeField] Animator myAnimator;
+    [SerializeField] GameObject soundFXGameObject;
+    [SerializeField] AudioClip hitSFX;
     public WeaponPack myWeaponPack;
     
     float moveSpeed = 5f;
@@ -301,6 +303,8 @@ public class Hero : MonoBehaviour {
             string displayText = "-" + damageTaken.ToString();
             Vector3 spawnSpot = transform.position + Vector3.up * verticaDisplayOffset;
             DisplayRepository.Instance.CreateDisplay(Display.Damage, spawnSpot, displayText, textColor);
+            TemporaryAudioPlayer soundBox = (Instantiate(soundFXGameObject, Camera.main.transform) as GameObject).GetComponent<TemporaryAudioPlayer>();
+            soundBox.SetClip(hitSFX);
         }
         myStats.currentHealth -= damageTaken;
         UICanvas.Instance.SetHealth(myStats);

@@ -20,7 +20,11 @@ public class Weapon : MonoBehaviour{
     protected List<Collider2D> thisSwingsHits = new List<Collider2D>();
 
     public virtual IEnumerator Attack(int wielderAttack, CardinalDirection attackDir) {
-        //mySoundBox.PlayOneShot(myWeaponStats.myAudioClips[level-1]);
+        int numClips = myWeaponStats.myAudioClips.Length;
+        int levelInd = myWeaponStats.level - 1;
+        if (levelInd < numClips) {
+            mySoundBox.PlayOneShot(myWeaponStats.myAudioClips[levelInd]);
+        }
         thisSwingsHits = new List<Collider2D>();
         this.wielderAttack = wielderAttack;
         myCol.enabled = true;
